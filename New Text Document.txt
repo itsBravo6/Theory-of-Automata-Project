@@ -1,0 +1,69 @@
+str = input("Enter the word: ")
+length_of_word = len(str) + 2
+tape = ['*']*length_of_word
+i = 1
+_tape_head = 1
+#Assigning position of String in Tape
+for s in str: 
+    tape[i] = s
+    i += 1
+
+state = 0
+#assigning characters to variable so that don't have to use characters each time
+X, Y, S, Z, B, R, L = 'X', 'Y', 'S','Z', '*', 'R', 'L' 
+old_tape_head = -1
+accept = False
+
+def action(input_char, replace_with, move, new_state):
+    global _tape_head, state
+    if tape[_tape_head] == input_char:
+        tape[_tape_head] = replace_with
+        state = new_state
+        if move == 'L':
+            _tape_head -= 1
+            return True
+        elif move == 'R':
+            _tape_head += 1
+            return True
+    return False
+
+while(old_tape_head != _tape_head): #if tapehead not moving that means terminate Turing machine
+    old_tape_head = _tape_head
+    print(tape , "with tapehead at index", _tape_head, "on state" , state)
+    
+    if state == 0:
+        if action('a', X, R, 1) or action(X, X, R, 1) or action(Y, Y, R, 4):
+            pass
+        
+    elif state == 1:
+        if action(X, X, R, 1) or action(Y, Y, R, 1) or action('a', 'a', R, 1) or action('b', Y, R, 2):
+            pass
+        
+    elif state == 2:
+        if action('c', Z, L, 3) or action(Z, Z, R, 2) or action('b', 'b', R, 2):
+            pass
+            
+    elif state == 3:
+        if action('b', 'b', L, 3) or action('a', 'a', L, 3) or action(X, X, R, 0) or action(Y, Y, L, 3) or action(Z, Z, L, 3):
+            pass
+    
+    elif state == 4:
+        if action(X, X, R, 4) or action(Y, Y, R, 4) or action(Z, Z, R, 5) or action('b', Y, R, 2):
+            pass
+        
+    elif state == 5:
+        if action(Z, Z, R, 5) or action(B, B, R, 6) or action('c', Z, L, 3):
+            pass
+            
+    elif state == 6:
+       
+        accept = True
+
+    else:
+        accept = True
+        
+            
+if accept:
+    print("String accepted on state = ", state)
+else:
+    print("String not accepted on state = ", state)
